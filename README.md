@@ -4,6 +4,8 @@ The purpose of this library is to allow experiment with how the `Stream` trait r
 
 In that proposal, once the std `Stream` trait is stable, `futures_core::Stream` is replaced with re-export from the standard library. In the version that has stable std `Stream`, std `Stream` and `futures_core::Stream` is the same trait.
 
+This should ideally be implemented by using cfg-accessible, but it's not yet stable, so use a build script.
+
 ### Known limitations/issues
 
 Known limitations/issues when applying this way to `Stream` trait are:

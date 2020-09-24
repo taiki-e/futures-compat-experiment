@@ -1,6 +1,6 @@
-This is an experiment to make `core::{future, task}` available in a version that is not yet stable in the standard library.
+This library is an experiment to make `core::{future, task}` available in a version that is not yet stable in the standard library.
 
-The purpose of this library is to allow experiment with how he `Stream` trait re-export proposed in [rust-lang/futures-rs#2207] works.
+The purpose of this library is to allow experiment with how the `Stream` trait re-export proposed in [rust-lang/futures-rs#2207] works.
 
 In that proposal, once the std `Stream` trait is stable, `futures_core::Stream` is replaced with re-export from the standard library. In the version that has stable std `Stream`, std `Stream` and `futures_core::Stream` is the same trait.
 

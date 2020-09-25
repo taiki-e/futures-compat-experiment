@@ -1,7 +1,9 @@
-use std::env;
-use std::io::Write;
-use std::process::{Command, Stdio};
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::{
+    env,
+    io::Write,
+    process::{Command, Stdio},
+    sync::atomic::{AtomicUsize, Ordering},
+};
 
 const PROBE_HAS_FUTURE: &str = r#"
     #![allow(unused)]
@@ -13,22 +15,29 @@ const PROBE_HAS_STD: &str = r#"
     #![no_std]
     extern crate std;
 "#;
+const PROBE_HAS_CORE: &str = r#"
+    #![allow(unused)]
+    #![no_std]
+    extern crate core as _core;
+"#;
 
 fn main() {
+    if probe(PROBE_HAS_FUTURE).unwrap_or(false) {
+        println!("cargo:rustc-cfg=std_future_trait")
+    } else if probe(PROBE_HAS_STD).unwrap_or(false) {
+        println!("cargo:rustc-cfg=std_crate")
+    } else if !probe(PROBE_HAS_CORE).unwrap_or(false) {
+        // Treat as "the build script did not run" because `probe` is not
+        // working properly in the current environment.
+        return;
+    }
+
     // Mark build script has been run.
     // If this is not set and trait is already stable on the latest stable compiler,
     // always prioritize re-export from core.
     // Note: This means that it is likely that older compilers will not be
     //       supported in build systems where build-script cannot be run.
     println!("cargo:rustc-cfg=has_build_script");
-
-    if probe(PROBE_HAS_FUTURE).unwrap_or(false) {
-        println!("cargo:rustc-cfg=std_future_trait")
-    } else {
-        if probe(PROBE_HAS_STD).unwrap_or(false) {
-            println!("cargo:rustc-cfg=std_crate")
-        }
-    }
 }
 
 // https://github.com/cuviper/autocfg/blob/d2c60343b63239dd514622df39172f90463db886/src/lib.rs#L229-L263

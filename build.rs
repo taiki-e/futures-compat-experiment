@@ -29,6 +29,7 @@ fn main() {
     } else if !probe(PROBE_HAS_CORE).unwrap_or(false) {
         // Treat as "the build script did not run" because `probe` is not
         // working properly in the current environment.
+        println!("cargo:warning={}: unable to determine rustc version", env!("CARGO_PKG_NAME"));
         return;
     }
 

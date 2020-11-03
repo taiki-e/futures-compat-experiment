@@ -1,9 +1,12 @@
 name: CI
+
 on:
   pull_request:
   push:
     branches:
       - master
+  schedule:
+    - cron: '0 1 * * *'
 
 env:
   RUSTFLAGS: -Dwarnings
@@ -11,7 +14,6 @@ env:
 
 jobs:
   build:
-    name: cargo +${{ matrix.rust }} build
     strategy:
       matrix:
         rust:

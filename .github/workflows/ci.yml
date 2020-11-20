@@ -10,7 +10,7 @@ on:
 
 env:
   CARGO_INCREMENTAL: 0
-  RUSTFLAGS: -Dwarnings
+  RUSTFLAGS: -D warnings
   RUST_BACKTRACE: 1
 
 jobs:
@@ -25,8 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install Rust
-        run: rustup update ${{ matrix.rust }} && rustup default ${{ matrix.rust }}
+      - uses: taiki-e/github-actions/install-rust@main
+        with:
+          toolchain: ${{ matrix.rust }}
       - run: rustup target add thumbv7m-none-eabi
       - run: cargo build
       - run: cargo build --target thumbv7m-none-eabi

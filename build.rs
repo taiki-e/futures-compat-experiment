@@ -33,7 +33,7 @@ fn main() {
         return;
     }
 
-    // Mark build script has been run.
+    // Mark as build script has been run successfully.
     // If this is not set and trait is already stable on the latest stable compiler,
     // always prioritize re-export from core.
     // Note: This means that it is likely that older compilers will not be
@@ -50,9 +50,8 @@ fn probe(code: &str) -> Option<bool> {
     let target = env::var_os("TARGET");
 
     let id = ID.fetch_add(1, Ordering::Relaxed);
-    let mut command = Command::new(rustc);
-    command
-        .stderr(Stdio::null())
+    let mut cmd = Command::new(rustc);
+    cmd.stderr(Stdio::null())
         .arg("--edition=2018")
         .arg("--crate-name")
         .arg(format!("futures_compat_experiment_build{}", id))
@@ -62,13 +61,13 @@ fn probe(code: &str) -> Option<bool> {
         .arg("--emit=llvm-ir");
 
     if let Some(target) = target {
-        command.arg("--target").arg(target);
+        cmd.arg("--target").arg(target);
     }
 
     // TODO: handle rustflags
 
-    command.arg("-").stdin(Stdio::piped());
-    let mut child = command.spawn().ok()?;
+    cmd.arg("-").stdin(Stdio::piped());
+    let mut child = cmd.spawn().ok()?;
     let mut stdin = child.stdin.take().expect("rustc stdin");
 
     stdin.write_all(code.as_bytes()).ok()?;

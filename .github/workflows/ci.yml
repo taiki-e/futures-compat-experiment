@@ -18,9 +18,9 @@ jobs:
     strategy:
       matrix:
         rust:
-          - 1.33.0
-          - 1.35.0
-          - 1.36.0
+          - 1.33
+          - 1.35
+          - 1.36
           - stable
     runs-on: ubuntu-latest
     steps:
